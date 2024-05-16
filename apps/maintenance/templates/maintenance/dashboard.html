@@ -1,0 +1,1335 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+{% block content %}
+
+
+    <!-- PAGE -->
+    <div class="page">
+        <div class="page-main">
+            {% include "include/header.html" %}
+            <!--app-content open-->
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    <!-- CONTAINER -->
+                    <div class="main-container container-fluid">
+
+                        <!-- PAGE-HEADER -->
+                        <div class="page-header">
+                            <h1 class="page-title" style="font-weight: bold;">Property {{request.user.get_role_display}} {% if request.user.primary_unit %}- {{request.user.primary_unit.name}}{% endif %} Dashboard</h1>
+                                
+                           
+                            <div>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <!-- PAGE-HEADER END -->
+
+                        <!-- ROW-1 -->
+                        <div class="row cards-row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                                <div class="row">
+                                    {% for item in cards %}
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body" style="height: 8rem;">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="fw-bold ">{{ item.label }}
+                                                        </h6>
+                                                        <h2 class="mb-0 number-font">{{item.value}}</h2>
+                                                    </div>
+                                                    <div style="margin-left:3rem;">
+                                                        {%if item.label == 'All Requests'%}
+                                                        <svg style="width:60px; filter:contrast(0.8)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="request"><g data-name="Layer 36"><path fill="#303030" d="M7,30H25a5,5,0,0,0,5-5V7a5,5,0,0,0-5-5H7A5,5,0,0,0,2,7V25A5,5,0,0,0,7,30Zm7-19V4h4v7a1,1,0,0,0,1,1h1l-4,5.33L12,12h1A1,1,0,0,0,14,11ZM4,7A3,3,0,0,1,7,4h5v6H11a1.5,1.5,0,0,0-1.2,2.4l4.6,6.12a2,2,0,0,0,3.2,0l4.6-6.13A1.5,1.5,0,0,0,21,10H20V4h5a3,3,0,0,1,3,3V25a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3Z"></path><path fill="#f2466f" d="M12,12h1a1,1,0,0,0,1-1V4h4v7a1,1,0,0,0,1,1h1l-4,5.33Z"></path><path fill="#fdd353" d="M4,25V7A3,3,0,0,1,7,4h5v6H11a1.5,1.5,0,0,0-1.2,2.4l4.6,6.12a2,2,0,0,0,3.2,0l4.6-6.13A1.5,1.5,0,0,0,21,10H20V4h5a3,3,0,0,1,3,3V25a3,3,0,0,1-3,3H7A3,3,0,0,1,4,25Z"></path></g></svg>
+                                                        {%else%}
+                                                        <img  src="media/{{item.icon}}" width="60px" alt="">
+                                                        {%endif%}
+                                                    </div>
+                                                   
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {%endfor%}
+                                
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                            <div class="card overflow-hidden">
+                                                <div class="card-body" style="height: 8rem;">
+                                                    <div class="d-flex">
+                                                        <div class="mt-2">
+                                                            <h6 class="fw-bold">To do
+                                                            </h6>
+                                                            <h2 class="mb-0 number-font">{{audit_maintenance_requests}}</h2>
+                                                        </div>
+                                                        <div style="margin-left:4rem;">
+                                                            <svg style="width: 60px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" id="to-do-list"><rect width="46" height="52" x="7" y="9" fill="#c0ab91"></rect><rect width="40" height="46" x="10" y="12" fill="#bdfdff"></rect><path fill="#e0e0e2" d="M40,9v6a2.006,2.006,0,0,1-2,2H22a2.006,2.006,0,0,1-2-2V9h4A6,6,0,0,1,36,9Z"></path><circle cx="30" cy="7" r="2" fill="#2d2d30"></circle><rect width="5" height="2" x="21" y="10" fill="#fff" rx="1"></rect><rect width="8" height="8" x="16" y="23" fill="#00e7f0"></rect><rect width="8" height="8" x="16" y="36" fill="#00e7f0"></rect><path fill="#ff5023" d="M18.707 25.293l-1.414 1.414 2 2a1 1 0 0 0 1.288.107l7-5-1.162-1.628-6.311 4.508zM20.108 39.694l-1.4-1.4-1.414 1.414 2 2a1 1 0 0 0 1.288.107l7-5-1.162-1.628z"></path><rect width="2" height="2" x="33" y="22" fill="#1a6fb0"></rect><rect width="8" height="2" x="37" y="22" fill="#1a6fb0"></rect><rect width="12" height="2" x="33" y="26" fill="#1a6fb0"></rect><circle cx="43" cy="47" r="14" fill="#ffde55"></circle><circle cx="43" cy="47" r="11" fill="#fff"></circle><path fill="#3e3d42" d="M43,35A12,12,0,1,0,55,47,12.013,12.013,0,0,0,43,35Zm1,21.949V56H42v.949A10.015,10.015,0,0,1,33.051,48H34V46h-.949A10.015,10.015,0,0,1,42,37.051V38h2v-.949A10.015,10.015,0,0,1,52.949,46H52v2h.949A10.015,10.015,0,0,1,44,56.949Z"></path><path fill="#3e3d42" d="M45,47a1.993,1.993,0,0,0-1-1.722V40H42v5.278A1.994,1.994,0,0,0,43,49a1.96,1.96,0,0,0,.511-.075l2.782,2.782,1.414-1.414-2.782-2.782A1.96,1.96,0,0,0,45,47Z"></path></svg>
+                                                        </div>
+                                                    
+                                                    </div>
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% if request.user.role != 'manager' and not request.user.is_superuser %}
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body" style="height: 8rem;">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="fw-bold">Assigned to me</h6>
+                                                        <h2 class="mb-0 number-font">{{assigned_to_me}}</h2>
+                                                    </div>
+                                                    <div class="ms-auto" style="margin-left: 3rem;">
+                                                       <svg style="width:60px; filter:contrast(0.8)" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 68 68" viewBox="0 0 68 68" id="bell"><path fill="#444" d="M34.00497,2.09885c-2.95001,0-5.35999,2.39996-5.35999,5.35999c0,1.5,0.63,2.84998,1.63,3.83002c2.48328,1.73978,4.96661,1.73981,7.45001,0c1.01001-0.97003,1.63-2.33002,1.63-3.83002C39.35501,4.49882,36.95499,2.09885,34.00497,2.09885z M34.00442,10.43678c-1.64483,0-2.9874-1.33367-2.9874-2.9785s1.34257-2.9874,2.9874-2.9874c1.64489,0,2.97856,1.34257,2.97856,2.9874S35.64931,10.43678,34.00442,10.43678z"></path><path fill="#feeb75" d="M59.58279,53.83213c0,2.3898-1.9436,4.3333-4.33339,4.3333H12.7506c-2.3898,0-4.33339-1.9435-4.33339-4.3333c0-1.81399,1.16612-3.38326,2.85059-4.05985c2.77853-1.13739,4.73645-3.85828,4.73645-7.03996V29.49963c0-9.97683,8.06206-18.67244,17.99575-18.88833c9.93369,0.2159,17.99575,8.9115,17.99575,18.88833v13.23269c0,3.18168,1.95792,5.90257,4.73645,7.03996C58.41666,50.44888,59.58279,52.01814,59.58279,53.83213z"></path><path fill="#efd96a" d="M37.21002,10.98995C36.76001,11.08998,36.31,11.19997,35.87,11.32997c-8.56,1.64001-15.12,9.58997-15.12,18.57996v13.23004c0,3.17999-1.95001,5.89996-4.72998,7.03998c-1.69,0.67999-2.85004,2.25-2.85004,4.06c0,1.73999,1.03003,3.25,2.51001,3.92999H12.75c-2.39001,0-4.33002-1.94995-4.33002-4.33997c0-1.81,1.16003-3.38,2.85004-4.06C14.04999,48.62996,16,45.90993,16,42.72993V29.49996c0-9.97998,8.07001-18.66998,18-18.89001C35.10004,10.62996,36.16998,10.75997,37.21002,10.98995z"></path><path fill="#fff3ab" d="M38.89001 11.28761c-7.82538 2.22247-13.65332 9.74231-13.65332 18.21234v13.22998c0 3.17999-1.95001 5.90002-4.71997 7.04004-1.69.67999-2.86005 2.25-2.86005 4.06 0 2.39001 1.94 4.33997 4.33002 4.33997h2.69c-2.39001 0-4.33002-1.94995-4.33002-4.33997 0-1.81 1.16003-3.38 2.85004-4.06 2.77997-1.14001 4.72998-3.86005 4.72998-7.04004V29.49996c0-7.47003 4.52795-14.19885 10.96332-17.20691V11.28761zM59.58002 53.82997c0 2.39001-1.94 4.33997-4.33002 4.33997h-6.41998c2.39001 0 4.33002-1.94995 4.33002-4.33997 0-1.81-1.16003-3.38-2.85004-4.06-2.77997-1.14001-4.72998-3.86005-4.72998-7.04004V29.49996c0-6.27002-1.67999-14.95001-6.69-18.07001 7.56 2.40002 13.09998 9.79004 13.09998 18.07001v13.22998c0 3.17999 1.96002 5.90002 4.74005 7.04004C58.41003 50.44997 59.58002 52.01997 59.58002 53.82997z"></path><path fill="#444" d="M41.73571,58.16543c0,4.27232-3.4634,7.73571-7.73571,7.73571s-7.73571-3.4634-7.73571-7.73571H41.73571z"></path><path fill="#333" d="M33.95001,58.16542v7.73322c-0.01685,0.00012-0.03314,0.0025-0.04999,0.0025c-4.27234,0-7.73572-3.46338-7.73572-7.73572H33.95001z"></path><path fill="#fff" d="M45.48474 23.20497c-.34277 0-.67676-.17676-.86328-.49414-1.62402-2.7666-4.10449-4.86133-6.98535-5.89746-.51953-.1875-.78906-.75977-.60254-1.28027.1875-.51855.75684-.78809 1.28027-.60254 3.31934 1.19434 6.17188 3.59863 8.03223 6.76855.2793.47656.12012 1.08887-.35645 1.36816C45.83044 23.16103 45.65662 23.20497 45.48474 23.20497zM46.99158 26.82997c-.44043 0-.84473-.29395-.96484-.74023l-.0459-.17676c-.02441-.09668-.04883-.19238-.07813-.28711-.16309-.52734.13184-1.08789.65918-1.25098.53027-.16211 1.08789.13281 1.25098.65918.03906.12598.07227.25391.10547.38184l.04004.1543c.14355.5332-.17285 1.08203-.70605 1.22559C47.16541 26.81923 47.07751 26.82997 46.99158 26.82997z"></path></svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                               
+                                        </div>
+                                    </div>
+                                    {%endif%}
+                                    {% comment %} <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="">Total Profit</h6>
+                                                        <h2 class="mb-0 number-font">67,987</h2>
+                                                    </div>
+                                                    <div class="ms-auto">
+                                                        <div class="chart-wrapper mt-1">
+                                                            <canvas id="leadschart"
+                                                                class="h-8 w-9 chart-dropshadow"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted fs-12"><span class="text-pink"><i
+                                                            class="fe fe-arrow-down-circle text-pink"></i> 0.75%</span>
+                                                    Last 6 days</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="">Total Expenses</h6>
+                                                        <h2 class="mb-0 number-font">$76,965</h2>
+                                                    </div>
+                                                    <div class="ms-auto">
+                                                        <div class="chart-wrapper mt-1">
+                                                            <canvas id="profitchart"
+                                                                class="h-8 w-9 chart-dropshadow"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted fs-12"><span class="text-green"><i
+                                                            class="fe fe-arrow-up-circle text-green"></i> 0.9%</span>
+                                                    Last 9 days</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xl-3">
+                                        <div class="card overflow-hidden">
+                                            <div class="card-body">
+                                                <div class="d-flex">
+                                                    <div class="mt-2">
+                                                        <h6 class="">Total Cost</h6>
+                                                        <h2 class="mb-0 number-font">$59,765</h2>
+                                                    </div>
+                                                    <div class="ms-auto">
+                                                        <div class="chart-wrapper mt-1">
+                                                            <canvas id="costchart"
+                                                                class="h-8 w-9 chart-dropshadow"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="text-muted fs-12"><span class="text-warning"><i
+                                                            class="fe fe-arrow-up-circle text-warning"></i> 0.6%</span>
+                                                    Last year</span>
+                                            </div>
+                                        </div>
+                                    </div> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW-1 END -->
+
+
+                        <!-- ROW-4 -->
+                        <div class="row">
+                         
+                            <div class="col-12 my-2" style="text-align:right">
+                                <button type="button" class="btn btn-primary"  data-bs-effect="effect-rotate-left" data-bs-toggle="modal" href="#modaldemo8"><i class="fe fe-plus me-2"></i>Submit New Request</button>
+                                <button type="button" class="btn btn-primary toggle-cards" >Hide Cards</button>
+                                {% comment %} <a class="modal-effect btn btn-success-light d-grid mb-3">Rotate Left</a> {% endcomment %}
+                            </div>
+                         
+                            <div class="col-12 col-sm-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title mb-0">Maintenace Requests</h3>
+                                    </div>
+                                    
+                                    <div class="card-body pt-4">
+                                        <div class="grid-margin">
+                                            <div class="">
+                                                <div class="panel panel-primary">
+                                                    <div class="tab-menu-heading border-0 p-0">
+                                                        <div class="tabs-menu1">
+                                                            <!-- Tabs -->
+                                                            <ul class="nav panel-tabs product-sale">
+                                                                <li class="status_b"><a href="#tab5" class="active"
+                                                                        data-bs-toggle="tab">All Requests</a></li>
+                                                                <li class="status_b"><a href="#tab5" 
+                                                                    data-bs-toggle="tab">To do</a></li>
+                                                                {% for column in columns %}
+                                                                    <li class="status_b"  data-bs-placement="top" data-bs-toggle="tooltip" title="" data-bs-original-title="{{column.status_description}}"><a href="#tab6" data-bs-toggle="tab"
+                                                                            class="text-dark">{{column.name}}</a></li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel-body tabs-menu-body border-0 pt-0">
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane active" id="tab5">
+                                                                <div class="table-responsive">
+                                                                    <table id="data-table"
+                                                                        class="table table-bordered text-nowrap mb-0">
+                                                                        <thead class="border-top">
+                                                                            <tr>
+                                                                                <th class="bg-transparent border-bottom-0"
+                                                                                    style="width: 5%;">Request ID</th>
+                                                                                <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Request Title</th>
+                                                                                <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Customer</th>
+                                                                                <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Date</th>
+                                                                                    <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Building</th>
+                                                                                    <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Unit</th>
+                                                                                    <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Room</th>
+                                                                                    <th
+                                                                                    class="bg-transparent border-bottom-0"
+                                                                                    >Mantenance Item</th>
+                                                                                    <th class="bg-transparent border-bottom-0 d-none"
+                                                                                    >Request type</th>
+                                                                                    {% if request.user.role == 'manager'%}
+                                                                                    <th class="bg-transparent border-bottom-0">Assigned To</th>
+                                                                                    {%endif%}
+                                                                                <th class="bg-transparent border-bottom-0"
+                                                                                    >Status</th>
+                                                                               
+                                                                                <th class="bg-transparent border-bottom-0"
+                                                                                    >Action</th>
+
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            {% for maintenance in maintenances %}
+                                                                            <tr class="border-bottom" >
+                                                                                    <td class="text-center">
+                                                                                        <a href="{% url "maintenance" %}?open_maintenance={{maintenance.id}}">
+                                                                                            <div class="mt-0 mt-sm-2 d-block">
+                                                                                                <h6
+                                                                                                    class="mb-0 fs-14 fw-semibold">
+                                                                                                    {{maintenance.id}}</h6>
+                                                                                            </div>
+                                                                                        
+                                                                                        <a>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="d-flex">
+                                                                                            <span class="avatar bradius"
+                                                                                                style="background-image: url(../assets/images/orders/10.jpg)"></span>
+                                                                                            <div
+                                                                                                class="ms-3 mt-0 mt-sm-2 d-block">
+                                                                                                <h6
+                                                                                                    class="mb-0 fs-14 fw-semibold">
+                                                                                                    {{maintenance.request_title}}</h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="d-flex">
+                                                                                            <div
+                                                                                                class="mt-0 mt-sm-3 d-block">
+                                                                                                <h6
+                                                                                                    class="mb-0 fs-14 fw-semibold">
+                                                                                                    {{maintenance.user.first_name}}</h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td><span class="mt-sm-2 d-block">{{maintenance.enquiryDate}}</span></td>
+                                                                                    <td><span class="mt-sm-2 d-block">{{maintenance.building.name}}</span></td>
+                                                                                    <td><span class="mt-sm-2 d-block">{{maintenance.unit.name}}</span></td>
+                                                                                    <td><span class="mt-sm-2 d-block">{{maintenance.room.room_no}}</span></td>
+                                                                                    <td><span class="mt-sm-2 d-block">{{maintenance.maintenance_item.name}}</span></td>
+                                                                                    <td style="display: none;"><span class="mt-sm-2 d-block badge2">{{maintenance.request_type}}</span></td>
+                                                                                    {% if request.user.role == 'manager'%}
+                                                                                        <td>
+                                                                                            {%for item in maintenance.get_assigned_employess%}
+                                                                                            <span class="mt-sm-2 d-block">{{item.user.username}}</span>
+                                                                                            {%endfor%}
+                                                                                        </td>
+                                                                                    {%endif%}
+                                                                                    <td>
+                                                                                        <div class="mt-sm-1 d-block" data-bs-placement="top" data-bs-toggle="tooltip" title="" data-bs-original-title="{{column.status_description}}">
+                                                                                            <span
+                                                                                                class="badge bg-{{maintenance.status.color_class}}-transparent rounded-pill text-{{maintenance.status.color_class}} p-2 px-3">{{maintenance.status.name}}</span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                    
+                                                                                        <div class="g-2">
+                                                                                            <button type="button" class="btn btn-sm btn-primary" data-bs-effect="effect-rotate-left" onclick="window.location.replace('{% url "maintenance" %}?open_maintenance={{maintenance.id}}')">
+                                                                                                <i class="fe fe-edit"></i>
+                                                                                            </button>
+                                                                                            
+                                                                                            {%if request.user.role != 'tech'%}
+                                                                                                {%if request.user.role == 'manager'%}
+                                                                                                    <button type="button" class="btn btn-sm btn-danger" data-bs-effect="effect-rotate-left" data-bs-toggle="modal" href="#modaldemo5" onclick="editDelete({{maintenance.id}})"><i class="fe fe-trash-2"></i></button>
+                                                                                                {%else%}
+                                                                                                    {%if maintenance.user == request.user%}
+                                                                                                        <button type="button" class="btn btn-sm btn-danger" data-bs-effect="effect-rotate-left" data-bs-toggle="modal" href="#modaldemo5" onclick="editDelete({{maintenance.id}})"><i class="fe fe-trash-2"></i></button>
+                                                                                                        {%else%}
+                                                                                                        <button type="button" class="btn btn-sm btn-danger" disabled data-bs-effect="effect-rotate-left" data-bs-toggle="modal" href="#modaldemo5" onclick="editDelete({{maintenance.id}})"><i class="fe fe-trash-2"></i></button>
+                                                                                                        {%endif%}
+                                                                                                   
+
+                                                                                                {%endif%}
+                                                                                            {%endif%}
+                                                                                        </div>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                            {% endfor %}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ROW-4 END -->
+                    </div>
+                    <!-- CONTAINER END -->
+                </div>
+            </div>
+            <!--app-content close-->
+
+        </div>
+
+        <!-- Sidebar-right -->
+        <div class="sidebar sidebar-right sidebar-animate">
+            <div class="panel panel-primary card mb-0 shadow-none border-0">
+                <div class="tab-menu-heading border-0 d-flex p-3">
+                    <div class="card-title mb-0"><i class="fe fe-bell me-2"></i><span
+                            class=" pulse"></span>Notifications</div>
+                    <div class="card-options ms-auto">
+                        <a href="javascript:void(0);" class="sidebar-icon text-end float-end me-3 mb-1"
+                            data-bs-toggle="sidebar-right" data-target=".sidebar-right"><i
+                                class="fe fe-x text-white"></i></a>
+                    </div>
+                </div>
+                <div class="panel-body tabs-menu-body latest-tasks p-0 border-0">
+                    <div class="tabs-menu border-bottom">
+                        <!-- Tabs -->
+                        <ul class="nav panel-tabs">
+                            <li class=""><a href="#side1" class="active" data-bs-toggle="tab"><i
+                                        class="fe fe-settings me-1"></i>Feeds</a></li>
+                            <li><a href="#side2" data-bs-toggle="tab"><i class="fe fe-message-circle"></i> Chat</a></li>
+                            <li><a href="#side3" data-bs-toggle="tab"><i class="fe fe-anchor me-1"></i>Timeline</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="side1">
+                            <div class="p-3 fw-semibold ps-5">Feeds</div>
+                            <div class="card-body pt-2">
+                                <div class="browser-stats">
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span class="feeds avatar-circle brround bg-primary-transparent"><i
+                                                    class="fe fe-user text-primary"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">New user registered</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-secondary brround bg-secondary-transparent"><i
+                                                    class="fe fe-shopping-cart text-secondary"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">New order delivered</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-danger brround bg-danger-transparent"><i
+                                                    class="fe fe-bell text-danger"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">You have pending tasks</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-warning brround bg-warning-transparent"><i
+                                                    class="fe fe-gitlab text-warning"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">New version arrived</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-pink brround bg-pink-transparent"><i
+                                                    class="fe fe-database text-pink"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">Server #1 overloaded</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-info brround bg-info-transparent"><i
+                                                    class="fe fe-check-circle text-info"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">New project launched</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                    <a href="javascript:void(0)"><i class="fe fe-x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-3 fw-semibold ps-5">Settings</div>
+                            <div class="card-body pt-2">
+                                <div class="browser-stats">
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span class="feeds avatar-circle brround bg-primary-transparent"><i
+                                                    class="fe fe-settings text-primary"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">General Settings</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-secondary brround bg-secondary-transparent"><i
+                                                    class="fe fe-map-pin text-secondary"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">Map Settings</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-danger brround bg-danger-transparent"><i
+                                                    class="fe fe-headphones text-danger"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">Support Settings</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-warning brround bg-warning-transparent"><i
+                                                    class="fe fe-credit-card text-warning"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">Payment Settings</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-sm-2 mb-sm-0 mb-3">
+                                            <span
+                                                class="feeds avatar-circle avatar-circle-pink brround bg-pink-transparent"><i
+                                                    class="fe fe-bell text-pink"></i></span>
+                                        </div>
+                                        <div class="col-sm-10 ps-sm-0">
+                                            <div class="d-flex align-items-end justify-content-between ms-2">
+                                                <h6 class="">Notification Settings</h6>
+                                                <div>
+                                                    <a href="javascript:void(0)"><i class="fe fe-settings me-1"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="side2">
+                            <div class="list-group list-group-flush">
+                                <div class="pt-3 fw-semibold ps-5">Today</div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/2.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Addie Minstra</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hey! there I' am available.... </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/11.jpg"><span
+                                                class="avatar-status bg-success"></span></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Rose Bush</div>
+                                            <p class="mb-0 fs-12 text-muted"> Okay...I will be waiting for you </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/10.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Claude Strophobia</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hi we can explain our new project......
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/13.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Eileen Dover</div>
+                                            <p class="mb-0 fs-12 text-muted"> New product Launching... </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/12.jpg"><span
+                                                class="avatar-status bg-success"></span></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Willie Findit</div>
+                                            <p class="mb-0 fs-12 text-muted"> Okay...I will be waiting for you </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/15.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Manny Jah</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hi we can explain our new project......
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/4.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Cherry Blossom</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hey! there I' am available....</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="pt-3 fw-semibold ps-5">Yesterday</div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/7.jpg"><span
+                                                class="avatar-status bg-success"></span></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Simon Sais</div>
+                                            <p class="mb-0 fs-12 text-muted">Schedule Realease...... </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/9.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Laura Biding</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hi we can explain our new project......
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/2.jpg"><span
+                                                class="avatar-status bg-success"></span></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Addie Minstra</div>
+                                            <p class="mb-0 fs-12 text-muted">Contact me for details....</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/9.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Ivan Notheridiya</div>
+                                            <p class="mb-0 fs-12 text-muted"> Hi we can explain our new project......
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/14.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Dulcie Veeta</div>
+                                            <p class="mb-0 fs-12 text-muted"> Okay...I will be waiting for you </p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/11.jpg"></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Florinda Carasco</div>
+                                            <p class="mb-0 fs-12 text-muted">New product Launching...</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="me-2">
+                                        <span class="avatar avatar-md brround cover-image"
+                                            data-bs-image-src="../assets/images/users/4.jpg"><span
+                                                class="avatar-status bg-success"></span></span>
+                                    </div>
+                                    <div class="">
+                                        <a href="chat.html">
+                                            <div class="fw-semibold text-dark" data-bs-toggle="modal"
+                                                data-target="#chatmodel">Cherry Blossom</div>
+                                            <p class="mb-0 fs-12 text-muted">cherryblossom@gmail.com</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="side3">
+                            <ul class="task-list timeline-task">
+                                <li class="d-sm-flex mt-4">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">Task Finished<span
+                                                class="text-muted fs-11 ms-2 fw-normal">09 July 2021</span></h6>
+                                        <p class="text-muted fs-12">Adam Berry finished task on<a href="javascript:void(0)"
+                                                class="fw-semibold"> Project Management</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                                <li class="d-sm-flex">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">New Comment<span
+                                                class="text-muted fs-11 ms-2 fw-normal">05 July 2021</span></h6>
+                                        <p class="text-muted fs-12">Victoria commented on Project <a href="javascript:void(0)"
+                                                class="fw-semibold"> AngularJS Template</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                                <li class="d-sm-flex">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">New Comment<span
+                                                class="text-muted fs-11 ms-2 fw-normal">25 June 2021</span></h6>
+                                        <p class="text-muted fs-12">Victoria commented on Project <a href="javascript:void(0)"
+                                                class="fw-semibold"> AngularJS Template</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                                <li class="d-sm-flex">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">Task Overdue<span
+                                                class="text-muted fs-11 ms-2 fw-normal">14 June 2021</span></h6>
+                                        <p class="text-muted mb-0 fs-12">Petey Cruiser finished task <a href="javascript:void(0)"
+                                                class="fw-semibold"> Integrated management</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                                <li class="d-sm-flex">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">Task Overdue<span
+                                                class="text-muted fs-11 ms-2 fw-normal">29 June 2021</span></h6>
+                                        <p class="text-muted mb-0 fs-12">Petey Cruiser finished task <a href="javascript:void(0)"
+                                                class="fw-semibold"> Integrated management</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                                <li class="d-sm-flex">
+                                    <div>
+                                        <i class="task-icon1"></i>
+                                        <h6 class="fw-semibold">Task Finished<span
+                                                class="text-muted fs-11 ms-2 fw-normal">09 July 2021</span></h6>
+                                        <p class="text-muted fs-12">Adam Berry finished task on<a href="javascript:void(0)"
+                                                class="fw-semibold"> Project Management</a></p>
+                                    </div>
+                                    <div class="ms-auto d-md-flex me-3">
+                                        <a href="javascript:void(0)" class="text-muted me-2"><span class="fe fe-edit"></span></a>
+                                        <a href="javascript:void(0)" class="text-muted"><span class="fe fe-trash-2"></span></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/Sidebar-right-->
+
+        <!-- MODAL EFFECTS -->
+        <div class="modal fade" id="modaldemo8">
+            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                <form action="{% url "maintenance" %}" id="request_form" enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <div class="modal-content modal-content-demo">
+                       
+                        <div class="modal-header">
+                            <h6 class="modal-title">Submit Request</h6><button type="button" aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                   
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <div style="display:none">
+                                    <div class="form-group">
+                                        <textarea name="maintenance_id" id="maintenance_id"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" value="{{request.user.first_name}}" placeholder="First Name" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 mb-0">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control"  value="{{request.user.last_name}}" placeholder="Last Name" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12 mb-0">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control"  name="request_title" placeholder="Request title" required>
+                                    </div>
+                                    {%if request.user.role == 'manager'%}
+                                    <div class="form-group">
+                                        <select class="form-control" id="request_type" required name="request_type" oninput="showStartEndDate()">
+                                            
+                                            <option value="ticket">Ticket</option>
+                                            <option value="audit">To Do</option>
+                                          
+                                        </select>
+                                    </div>
+                                    {%endif%}
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label mt-0" style="text-align:left">Chooose Attachments(If any)</label>
+                                        <input class="form-control" name="images" type="file" accept="image/*" multiple>
+                                    </div>
+                                </div>
+                            </div>
+                          
+                            <h3 style="text-align:left">Issues</h3>
+                            <div class="form-row">
+                                <div class="container-fluid" id="issues">
+                                    <div class="row">
+                                        <div class="form-group col-md-12 mb-0">
+                                         
+                                           
+                                            <div class="form-group" style="text-align:left;">
+                                                <label class="issue_date_label" id="issue_date_label">Issue Date</label>
+                                                <input required  type="date" id="request_date" class="form-control" name="request_date">
+                                            </div>
+
+                                            <div class="form-group" style="text-align:left; display: none;" id="endDate">
+                                                <label>End Date</label>
+                                                <input  type="date" id="request_date" class="form-control" name="end_date">
+                                            </div>
+                                            <div class="form-group" style="text-align: left;">
+                                                <label>Building</label>
+                                            
+                                                <select class="form-control" required name="issue_building" oninput="showNextSubCategory(this, 1, 'getunits','loader1')">
+                                                    <option value="none">Chose a Building</option>
+                                                    {%for building in buildings%}
+                                                        <option value="{{building}}">{{building}}</option>
+                                                    {%endfor%}
+                                                   
+                                                </select>
+                                                <div class="loader" id="loader1" style="text-align: center;">
+                                                    <img src="{%static 'images/loader.svg'%}" width="30px" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="subCategoryDiv1" style="display: none;text-align: left;">
+                                               <label for="subCategory1">Unit</label>
+                                                <select class="form-control" id="subCategory1" required name="issue_unit" oninput="showNextSubCategory(this, 2,'getrooms','loader2')">                                                   
+                                                </select>
+                                                <div class="loader" id="loader2" style="text-align: center;">
+                                                    <img src="{%static 'images/loader.svg'%}" width="30px" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="subCategoryDiv2" style="display: none;text-align: left;">
+                                               <label for="subCategory2">Room</label>
+                                                <select class="form-control"  id="subCategory2" required name="issue_room" oninput="showNextSubCategory(this, 3,'get_m_items','loader3')">
+                                                </select>
+                                                <div class="loader" id="loader3" style="text-align: center;">
+                                                    <img src="{%static 'images/loader.svg'%}" width="30px" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="subCategoryDiv3" style="display: none;text-align: left;">
+                                                <label for="subCategory3">Maintenannce Item</label>
+                                                <select class="form-control" id="subCategory3" required name="issue_maintenance_item" oninput="showNextSubCategory(this, 5,'show_desc')">
+                                                  
+                                                    {% for item in maintenance_items %}
+                                                    <option value="{{item}}">{{item}}</option>
+                                                    {%endfor%}
+                                                </select>
+                                                <div class="loader" id="loader4" style="text-align: center;">
+                                                    <img src="{%static 'images/loader.svg'%}" width="30px" alt="">
+                                                </div>
+                                                
+                                            </div>
+                                            <div  id="subCategoryDiv4" style="display: none; text-align: left;">
+                                                <label for="item_issue">Issue</label>
+                                                <select class="form-control" id="subCategory4" name="item_issue"  oninput="showNextSubCategory(this,5,'show_desc','loader5')">
+                                                </select>
+                                                <div class="loader" id="loader5" style="text-align: center;">
+                                                    <img src="{%static 'images/loader.svg'%}" width="30px" alt="">
+                                                </div>
+                                                <input type="text" class="form-control" name="other_m_item_issue" style="display: none;" id="input4" oninput="showNextSubCategory(this, 5,'show_desc')" placeholder="Enter yout answer" >
+                                            </div>
+                                            <div class="form-group" id="subCategoryDiv5" style="display: none;text-align: left;">
+                                                <label for="subCategory">Issue Description</label>
+                                                <textarea name="maintenance_issue_description" id="m_desc" placeholder="Enter your answer" class="form-control" cols="30" rows="4"></textarea>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" 
+                                    {% comment %} onclick="document.getElementById('request_form').submit();"  {% endcomment %}
+                                    class="btn btn-primary">Log Issue</button> 
+                                <button type="reset" class="btn btn-light" onclick="resetFormAndClose(this)" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                      
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal fade" id="modaldemo5">
+            <div class="modal-dialog modal-dialog-centered text-center" role="document">
+                <form action="{% url "delete_maintenance" %}" method="post">
+                    {% csrf_token %}
+                    <textarea id="maintenance_delete_id" name="maintenance_delete_id" style="display:none"></textarea>
+                    <div class="modal-content modal-content-demo">
+                        <div class="modal-header">
+                            <h6 class="modal-title">Cancel Confirmation</h6><button aria-label="Close" class="btn-close" data-bs-dismiss="modal"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body" style="text-align:left;">
+                            <label for="form-control">Enter Cancel Reason</label>
+                           <textarea name="cancel_reason" required id="cancel_request" class="form-control" cols="70" rows="5"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger">Confirm?</button> <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+
+        {% comment %} {% include "include/footer.html" %} {% endcomment %}
+
+        <script>
+
+            const button = document.querySelector('.toggle-cards');
+            const content = document.querySelector('.cards-row');
+
+            button.addEventListener('click', () => {
+            content.classList.toggle('open');
+                if (content.classList.contains('open')) {
+                    button.textContent = 'Expand Cards'; 
+                } else {
+                    button.textContent = 'Hide Cards';
+                }
+            });
+            function showStartEndDate(event){
+                request_type = document.getElementById('request_type').value;
+                issue_date = document.getElementById('issue_date_label');
+                end_date = document.getElementById('endDate');
+                if(request_type == 'audit'){
+                    end_date.style.display = 'block';
+                    issue_date.innerHTML = 'StartDate'
+                }else{
+                    end_date.style.display = 'none';
+                    issue_date.innerHTML = 'Issue Date';
+                }
+
+
+
+            }
+            function redirectToPage(event) {
+                var redirectUrl = '/maintenance/'
+                window.location.href = redirectUrl;
+            }
+            document.addEventListener('DOMContentLoaded', function () {
+                $('#data-table thead tr')
+                    .clone(true)
+                    .addClass('filters')
+                    .appendTo('#data-table thead');
+            
+                    var table = $('#data-table').DataTable({
+                        orderCellsTop: true,
+                        fixedHeader: true,
+                        initComplete: function () {
+                            var api = this.api();
+                
+                            // For each column
+                            api
+                                .columns()
+                                .eq(0)
+                                .each(function (colIdx) {
+                                    // Set the header cell to contain the input element
+                                    var cell = $('.filters th').eq(
+                                        $(api.column(colIdx).header()).index()
+                                    );
+                                    var title = $(cell).text();
+                                    $(cell).html('<input type="text" placeholder="' + title + '" />');
+                
+                                    // On every keypress in this input
+                                    $(
+                                        'input',
+                                        $('.filters th').eq($(api.column(colIdx).header()).index())
+                                    )
+                                        .off('keyup change')
+                                        .on('change', function (e) {
+                                            // Get the search value
+                                            $(this).attr('title', $(this).val());
+                                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
+                
+                                            var cursorPosition = this.selectionStart;
+                                            // Search the column for that value
+                                            api
+                                                .column(colIdx)
+                                                .search(
+                                                    this.value != ''
+                                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
+                                                        : '',
+                                                    this.value != '',
+                                                    this.value == ''
+                                                )
+                                                .draw();
+                                        })
+                                        .on('keyup', function (e) {
+                                            e.stopPropagation();
+                
+                                            $(this).trigger('change');
+                                            $(this)
+                                                .focus()[0]
+                                                .setSelectionRange(cursorPosition, cursorPosition);
+                                        });
+                                });
+                        },
+                    });
+                });
+
+           function resetFormAndClose() {
+                const form = document.getElementById('request_form');
+                form.reset();
+                document.getElementById('subCategoryDiv1').style.display = 'none';
+                document.getElementById('subCategoryDiv2').style.display = 'none';
+                document.getElementById('subCategoryDiv3').style.display = 'none';
+                document.getElementById('subCategoryDiv4').style.display = 'none';
+                document.getElementById('subCategoryDiv5').style.display = 'none';
+
+            }
+
+            function showNextSubCategory(selectElement, nextDivNumber, getitem, loader) {
+                var selectedValue = selectElement.value;
+                console.log(selectedValue);
+                if (getitem === 'show_desc' && selectedValue !== "other"){
+                    var nextSubCategoryInput = document.getElementById("subCategoryDiv" + (nextDivNumber));
+                    nextSubCategoryInput.style.display = "block";
+                    return
+                }
+                if ( selectedValue === "other"){
+                    console.log("herer");
+                    console.log(nextDivNumber-1);
+                    var nextSubCategoryInput = document.getElementById("input" + (nextDivNumber-1));
+                    if (nextSubCategoryInput.style.display === 'none'){
+                       
+                    nextSubCategoryInput.style.display = "block";
+                    return;
+                    }
+                    else{
+                    nextSubCategoryInput.style.display = "none";
+                }
+
+                }else{
+                        var nextSubCategoryInput = document.getElementById("input4");
+                        nextSubCategoryInput.style.display = "none";
+                    }
+
+                
+                
+                 if (selectedValue !== "none") {
+                    var url = `/api/${getitem}/${selectedValue}`; 
+                    var params = new URLSearchParams();
+                    params.append("param", selectedValue);
+                    console.log(loader);
+                    document.getElementById(loader).style.display='block';
+                    fetch(url)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data);  
+                            document.getElementById(loader).style.display='none';     
+                            var nextSubCategoryDiv = document.getElementById("subCategoryDiv" + nextDivNumber);
+                            nextSubCategoryDiv.style.display = "block";
+                           
+                            if (getitem === "getrooms"){
+                                populateNextDiv(data.room, nextDivNumber,getitem);
+
+                            }else if (getitem === "get_m_items"){
+                                populateNextDiv(data.maintenance_items, nextDivNumber,getitem);
+                            }else if (getitem === 'getissues'){
+                                populateNextDiv(data.issues, nextDivNumber,getitem);
+                            }
+                            else{
+                                populateNextDiv(data.units, nextDivNumber,getitem);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("There was a problem with the fetch operation:", error);
+                        });
+                    }
+                }
+
+        function populateNextDiv(data, nextDivNumber, getitem) {
+            
+            var subCategorySelect = document.getElementById("subCategory" + nextDivNumber);
+            subCategorySelect.innerHTML = ""
+            var option = document.createElement("option");
+            option.value = null
+            option.text = 'Chose a value'    
+            subCategorySelect.appendChild(option);        
+                for (var i = 0; i < data.length; i++) {
+                    var option = document.createElement("option");
+                    if (getitem === "getrooms"){
+                        option.value = data[i].room_no; 
+                        option.text = data[i].room_no;
+                    }
+                    else if(getitem === 'getissues'){
+                        option.value = data[i].title; 
+                        option.text = data[i].title;
+                    }
+                    else if(getitem === 'get_m_items'){
+                        option.value = data[i].name; 
+                        option.text = data[i].name;
+                    }
+                    else{
+                        option.value = data[i].name; 
+                        option.text = data[i].name;
+                    }
+                    subCategorySelect.appendChild(option);
+                }
+                if(getitem === 'getissues'){
+                        var option = document.createElement("option");
+                        option.value = 'other'
+                        option.text = 'other'
+                        subCategorySelect.appendChild(option);
+                    }
+            }
+            
+            function editDelete(id) {
+                document.getElementById("maintenance_delete_id").innerText = id
+            }
+            
+            function editMaintenance(id) {
+                console.log("htrere", id);
+                fetch(`/api/maintenance_detail/${id}/`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data.request_title);
+                        document.getElementById("maintenance_id").innerText = id;
+                        
+
+                        const form = document.getElementById('request_form');
+                        form.reset();
+                        
+                        // Populate the Building select element
+                        const buildingSelect = document.querySelector("select[name='issue_building']");
+                        buildingSelect.value = data.building.name;
+                        console.log(data);
+                        
+                        // Populate the Units select element
+                        const unitSelect = document.querySelector("select[name='issue_unit']");
+                        const roomSelect = document.querySelector("select[name='issue_room']");
+                        const m_item_Select = document.querySelector("select[name='issue_maintenance_item']");
+                        const item_issue_Select = document.querySelector("select[name='item_issue']");
+                        const m_date = document.querySelector("input[name='request_date']");
+
+                        const request_title = document.querySelector("input[name='request_title']");
+                        m_date.value = data.formatted_enquiry_date
+                        request_title.value = data.request_title;
+                        // Clear existing options before adding new ones
+                        unitSelect.innerHTML = "";
+                        roomSelect.innerHTML = "";
+                        m_item_Select.innerHTML = "";
+                        item_issue_Select.innerHTML = "";
+
+                        // Populate Units
+                        data.units.forEach((unit) => {
+                            const option = document.createElement("option");
+                            option.value = unit.name;
+                            option.textContent = unit.name;
+                            unitSelect.appendChild(option);
+                        });
+
+                        // Populate Rooms
+                        data.rooms.forEach((room) => {
+                            const option = document.createElement("option");
+                            option.value = room.room_no;
+                            option.textContent = room.room_no;
+                            roomSelect.appendChild(option);
+                        });
+
+                        // Populate Maintenance Items
+                        data.maintenance_items.forEach((item) => {
+                            const option = document.createElement("option");
+                            option.value = item.name;
+                            option.textContent = item.name;
+                            m_item_Select.appendChild(option);
+                        });
+
+                        // Populate Issue Titles
+                        data.issues.forEach((issue) => {
+                            const option = document.createElement("option");
+                            option.value = issue.title;
+                            option.textContent = issue.title;
+                            item_issue_Select.appendChild(option);
+                        });
+
+                        unitSelect.value = data.unit.name;
+                        roomSelect.value = data.room.room_no;
+                        m_item_Select.value = data.maintenance_item.name;
+                        item_issue_Select.value = data.issue.title;
+                        document.getElementById('m_desc').value = data.issue_details;
+
+                        // Reset the display
+                        document.getElementById('subCategoryDiv1').style.display = 'block';
+                        document.getElementById('subCategoryDiv2').style.display = 'block';
+                        document.getElementById('subCategoryDiv3').style.display = 'block';
+                        document.getElementById('subCategoryDiv4').style.display = 'block';
+                        document.getElementById('subCategoryDiv5').style.display = 'block';
+                        unitSelect.style.display = 'block';
+
+                        // Clear data variable
+                        data = null;
+                    });
+}
+
+
+            function fetchNotifications() {
+                fetch('/api/notifications/latest') // Replace with your API endpoint URL
+                    .then(response => response.json())
+                    .then(data => {
+                       liveToasts = document.getElementById("liveToasts")
+                       liveToasts.innerHTML = ""
+                       data.forEach((notification)=>{
+
+                            if (notification.event!='change'){
+
+                                liveToasts.innerHTML += `
+                                <div class="toast fade show" role="alert" onclick="location.reload();" aria-live="assertive" aria-atomic="true">
+                                    <div class="toast-header">
+                                        <i class="fe fe-bell me-2" style="font-size:18px"></i>
+                                        <strong class="me-auto">New notification</strong>
+                                        <small id="noti-time">${notification.timestamp}</small>
+                                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                    </div>
+                                    <div class="toast-body">
+                                        ${notification.message}
+                                    </div>
+                                </div>
+                                `
+                            }
+                       })
+                    })
+                    .catch(error => {
+                        console.error('Error fetching notifications:', error);
+                    });
+            }
+            const interval = setInterval(fetchNotifications, 5000);
+
+        </script>
+        
+    <div class="position-fixed bottom-0 end-0 p-3"id="liveToasts">
+        
+    </div>
+    </div>
+
+{% endblock content %}

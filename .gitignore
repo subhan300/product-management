@@ -20,7 +20,10 @@ parts/
 sdist/
 var/
 wheels/
+<<<<<<< HEAD
 share/python-wheels/
+=======
+>>>>>>> master
 *.egg-info/
 .installed.cfg
 *.egg
@@ -48,9 +51,12 @@ coverage.xml
 *.cover
 *.py,cover
 .hypothesis/
+<<<<<<< HEAD
 .pytest_cache/
 cover/
 
+=======
+>>>>>>> master
 
 # Translations
 *.mo
@@ -60,7 +66,11 @@ cover/
 *.log
 local_settings.py
 db.sqlite3
+<<<<<<< HEAD
 db.sqlite3-journal
+=======
+media
+>>>>>>> master
 
 # Flask stuff:
 instance/
@@ -73,11 +83,16 @@ instance/
 docs/_build/
 
 # PyBuilder
+<<<<<<< HEAD
 .pybuilder/
 target/
 
 media/
 
+=======
+target/
+
+>>>>>>> master
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -86,6 +101,7 @@ profile_default/
 ipython_config.py
 
 # pyenv
+<<<<<<< HEAD
 #   For a library or package, you might want to ignore these files since the code is
 #   intended to run in multiple environments; otherwise, check them in:
 # .python-version
@@ -130,6 +146,26 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+=======
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule.*
+
+# dotenv
+.env
+.env.local
+.env.production
+.env.test
+.env.stage
+
+# virtualenv
+.venv/
+venv/
+ENV/
+env.bak/
+env/
+>>>>>>> master
 
 # Spyder project settings
 .spyderproject
@@ -138,7 +174,11 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+<<<<<<< HEAD
 # mkdocs documentation
+=======
+# MkDocs documentation
+>>>>>>> master
 /site
 
 # mypy
@@ -148,6 +188,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+<<<<<<< HEAD
 
 # pytype static type analyzer
 .pytype/
@@ -161,3 +202,5 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+=======
+>>>>>>> master

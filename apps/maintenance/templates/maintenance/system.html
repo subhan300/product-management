@@ -1,0 +1,896 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>
+        Maintenance System
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+   
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+
+    <link type="text/css"
+        href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@fortawesome/fontawesome-free/css/all.min.css"
+        rel="stylesheet">
+       
+
+    <link type="text/css" href="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/css/volt.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/autofill/2.6.0/js/dataTables.autoFill.min.js"></script>
+  
+    <script src="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"></script>
+   
+   
+    <style>
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <main class="container-fluid">
+
+       
+        <div class="container-fluid">
+            <div class="row mt-4 mb-3">
+                <div class="col-6 d-flex justify-content-between ps-0">
+                    <div class="me-lg-3">
+                        <a href="#" class="btn btn-secondary text-dark"><span class="fas fa-plus me-2"></span><span>New
+                                Tasks</span></a>
+                    </div>
+                </div>
+                <div class="col-6 px-0 text-right">
+                    <div class="btn-group">
+                        <a href="{% url "dashboard" %}" class="btn btn-dark text-white"><span class="fas fa-home"></span></a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid kanban-container py-4 px-0">
+            <div class="row d-flex flex-nowrap">
+                {% for column in columns %}
+                <textarea class="form-control" id="maintenance_id" style="display: none;">{{column.id}}</textarea>
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fs-6 fw-bold">{{column.name}}</h5>
+
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-sm fs-6 px-1 py-0 dropdown-toggle"
+                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="fas fa-ellipsis-h"></span>
+                            </button>
+                            
+                        </div>
+                    </div>
+                    <div id="kanbanColumn{{column.id}}" class="kanban-column list-group kanban-list">
+                        <textarea name="kanban-column-id" class="d-none">{{column.id}}</textarea>
+                      
+                        {% for maintenance in column.maintenances %}
+                        <!-- data-bs-target="#editTaskModal" -->
+                        <div class="maintenance-card px-3 py-2" id="maintenance_task{{maintenance.id}}" onclick="editTask(`{{maintenance.id}}`)" data-bs-target="#editTaskModal" data-bs-toggle="modal" >
+                            <div class="card-header d-flex align-items-center justify-content-between border-0 p-0 mb-2">
+                                <textarea name="maintenance-card-id" class="d-none">{{maintenance.id}}</textarea>
+                                <h3 class="h5 p-3 mb-0">{{maintenance.request_title}}</h3>
+                                <div>
+                                    <div class="dropdown" >
+                                        <!-- class="btn btn-sm fs-6 px-1 py-0 dropdown-toggle" -->
+                                        <!-- id="dropdownMenuLink" -->
+                                        <!-- data-bs-toggle="dropdown" aria-expanded="false" -->
+                                        
+                                        <div class="dropdown-menu dashboard-dropdown dropdown-menu-start py-0"  aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item fw-normal rounded p-2 text-center" href="#" data-bs-toggle="modal" data-bs-target="#editTaskModal" onclick="editTask(`{{maintenance.id}}`)"><span class="fas fa-edit"></span>Edit task</a>
+                                            <div role="separator" class="dropdown-divider my-0"></div>
+                                            <a class="dropdown-item fw-normal text-danger rounded-bottom" href="#"><span class="fas fa-trash-alt"></span>Remove</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                {% if maintenance.problemImage %}
+                                <img src="{{maintenance.problemImage.0.image}}"
+                                    class="card-img-top mb-2 mb-lg-3" alt="themesberg marketplace">{% endif %}
+                                <p>{{maintenance.description|safe|truncatechars:200}}</p>
+                                <h5 class="fs-6 fw-normal mt-4">{{maintenance.assigned_users|length}} Tech Assigned</h5>
+                                <div class="avatar-group">
+                                    
+                                {% for employee in maintenance.assigned_users %}
+                                    <a href="#" class="avatar" data-bs-toggle="tooltip"
+                                        data-original-title="{{employee.user.first_name}}" data-bs-original-title="{{employee.user.first_name}} {{employee.user.last_name}}" title="{{employee.user.first_name}} {{employee.user.last_name}}">
+                                        <img class="rounded" alt="{{employee.user.first_name}}"
+                                            src="{{employee.user.profile_image.image}}">
+                                    </a>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-outline-gray-700 dashed-outline new-card w-100"
+                            data-bs-toggle="modal" data-bs-target="#KanbanAddCard">
+                            <span class="fas fa-plus me-2"></span> Add another card
+                        </button>
+                    </div>
+                    <!-- Add more tasks button  -->
+                    <div class="d-grid">
+                        <!-- Add Card Modal -->
+                        <div class="modal fade" id="KanbanAddCard" tabindex="-1" aria-labelledby="KanbanAddCardLabel4"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content p-4">
+                                    <div class="modal-header pb-0 border-0">
+                                        <h5 class="modal-title fw-normal" id="KanbanAddCardLabel4">Add a new task</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body pb-0">
+                                        <div class="mb-3">
+                                            <input type="email" class="form-control" id="exampleFormControlInput1"
+                                                placeholder="Enter a title for this card…">
+                                        </div>
+                                        <div class="mb-3">
+                                            <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                placeholder="Enter a description for this card…" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0 justify-content-start">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-success"><span
+                                                class="fas fa-plus me-2"></span>Add card</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+            <!-- Edit task card modal -->
+        </div>
+        <!-- Modal -->
+    <div class="modal fade"   id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" >
+            <div class="modal-content p-lg-3">
+                <div class="modal-header align-items-start border-gray-300">
+                    <div class="d-block">
+                        <h2 class="h5 mb-3" id="requestTitle"></h2>
+                        <div class="d-flex">
+                            <div class="d-block mx-3 me-sm-4">
+                                <h5 class="fs-6 fw-normal">Employees Assigned</h5> 
+                                <span id="employeesAssigned">
+                                </span>
+                                
+                                <button class="btn btn-icon btn-sm btn-gray-300"  data-bs-target="#editEmployeeModal" data-bs-toggle="modal" >
+                                    <span class="fas fa-plus"></span>
+                                </button>
+                            </div>
+                            <div class="d-block mx-2" style="float: right;right: 0;text-align: left;">
+                                <h5 class="fs-6 fw-normal" style="text-align: center"><b>Customer Name</b></h5> 
+                                <span id="customerName" style="text-align: left;" >
+
+                                </span>
+                            </div>
+                            <div class="d-block mx-3">
+                                <h5 class="fs-6 fw-normal" style="text-align: center"><b>Request Created</b></h5> 
+                                <span id="requestCreated"  style="text-align: center;">
+
+                                </span>
+                            </div>
+                            <div class="d-block mx-3">
+                                <h5 class="fs-6 fw-normal" style="text-align: center"><b>Request Status</b></h5> 
+                               
+                                <select id="requestStatus" style="text-align: center;
+                                padding: 0.3rem;
+                                border-radius: 10px;
+                                background: #f1f1f1;
+                                border-color: #e5e0e0;" oninput="updateStatus(this)" style="text-align: center;">
+                              
+
+                                </select>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" onclick="window.location.href = '/';" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-9 my-2" id="issues_list">
+                            </div>
+                            <div class="col-3 my-2" >
+                            <div id="attachment_list">
+
+                            </div>
+                            <div class="user-list my-2" id="user-list" style="display: none;
+                            flex-direction: column;
+                            align-items: flex-end; /* Align items to the right */
+                            gap: 10px; /* Spacing between user profiles */
+                            padding: 10px;
+                            background-color: #f4f4f4;
+                            border-radius: 10px;
+                           ">
+                                
+                                <!-- Add more user profiles here -->
+                            </div>
+                        </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row mb-4">
+                                <div class="col-auto">
+                                    <div class="rounded m-1">
+                                        <img class="image-sm rounded"
+                                            src="{% if request.user.profile_image %}{{request.user.profile_image.image.url}} {% else %} https://source.unsplash.com/featured/300x300 {% endif %}"
+                                            alt="{{request.user.email}}">
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="#!" class="text-gray-700 me-2">
+                                            <span class="fas fa-paperclip"></span>
+                                        </a>
+                                        <a href="#!" class="text-gray-700">
+                                            <span class="fas fa-camera-retro"></span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-10">
+                                    <!-- Form -->
+                                    <form id="submitCommentForm" method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            
+                                            <textarea class="form-control" id="coment"
+                                            placeholder="Leave a comment" rows="3"></textarea>
+                                            <label for="attachment" class="form-label">Choose Attachement(If needed)</label>
+                                            <input class="form-control" type="file" name="attachment" id="attachment">
+                                        </div>
+                                        <button class="btn btn-dark" style="text-align: right;right: 0;float: right;">Post<span class="fas fa-angle-right ms-2"></span> </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row mb-4 mb-lg-0" id="commentList">
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-start border-gray-300">
+                    <div class="d-none d-sm-flex">
+                        <textarea name="previous_status_id" id="previous_status_id" style="display: none;"></textarea>
+                        <button class="btn btn-gray-200 me-2" id="movePrevious"><span
+                                    class="fas fa-arrow-left me-2"></span></button>
+                        <button class="btn btn-gray-200 me-2" id="moveNext"></button>
+                        <textarea name="next_status_id" id="next_status_id" style="display: none;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of modal -->
+
+            <!-- Modal -->
+            <div class="modal fade"  id="editEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal-content p-lg-3">
+                    <div class="modal-header align-items-start border-gray-300">
+                        <div class="d-block">
+                            <div class="d-flex">
+                                <div class="d-block me-3 me-sm-4">
+                                    <h5 class="fs-6 fw-normal">Assign Employee</h5> 
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <form method="post" id="addEmployee">
+                            <div class="mb-2">
+                                <label class="my-1 me-2" for="state">Select Employee</label>
+                                <div class="choices">
+                                    <div class="choices__inner">
+                                        <select id="assinig_emloyee" class="w-100" style="border: 0;" name="employee">
+                                            {% for user in users %}
+                                                <option value="{{user.id}}">{{user.first_name}} {{user.last_name}} - ( {{user.email}} )</option>
+                                                
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <button class="btn btn-dark"style="text-align: right;right: 0;float: right;">Add<span class="fas fa-angle-plus ms-2"></span> </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of modal -->
+
+
+    </main>
+
+
+    <!-- Core Libs -->
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/@popperjs/core/dist/umd/popper.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Plugins -->
+    
+
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/nouislider/distribute/nouislider.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/countup.js/dist/countUp.umd.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/chartist/dist/chartist.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/simple-datatables/dist/umd/simple-datatables.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/fullcalendar/main.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/dropzone/dist/min/dropzone.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/notyf/notyf.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/leaflet/dist/leaflet.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/svgmap/dist/svgMap.min.js"></script>
+    <script
+        src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/simplebar/dist/simplebar.min.js"></script>
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/vendor/sortablejs/Sortable.min.js"></script>
+
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <!-- Volt PRO -->
+    <script src="https://appsrv1-147a1.kxcdn.com/volt-dashboard-pro-v131/js/volt.js"></script>
+
+    <script>
+       
+        let columns = document.getElementsByClassName("kanban-column")
+        for (let index = 0; index < columns.length; index++) {
+            let column = columns[index];
+            column.addEventListener('change', ()=>{
+                let columns = document.getElementsByClassName("kanban-column")
+                for (let index2 = 0; index2 < columns.length; index2++) {
+                    const column = columns[index2];
+                    cards = column.getElementsByClassName("maintenance-card")
+                    for (let index3 = 0; index3 < cards.length; index3++) {
+                        const card = cards[index3];
+                        console.log(card, column);
+                       
+                        payload = {
+                            kanban_column_id:column.querySelector("textarea[name='kanban-column-id']").value,
+                            maintenance_card_id:column.querySelector("textarea[name='maintenance-card-id']").value,
+                            csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+                        }
+                        console.log(payload);
+                        
+                        // Create an object with the request options
+                        const requestOptions = {
+                        method: 'POST', // Use 'POST' for sending data
+                        headers: {
+                            'Content-Type': 'application/json', // Set the content type to JSON if you're sending JSON data
+                            "X-CSRFToken": payload.csrfmiddlewaretoken,
+                        },
+                        body: JSON.stringify(payload), // Convert the payload to JSON string
+                        };
+                        // Use the fetch function to send the request
+                        fetch("{% url "moveto" %}", requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Status Updated...");
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+
+                        
+                    }
+                    
+                }
+            })
+        }
+        function updateStatus(selectElement) {
+            
+            var selectedValue = selectElement.value;
+            console.log(selectedValue);
+            let payload = {
+                kanban_column_id: selectedValue,
+                maintenance_card_id:  document.getElementById("maintenance_id").innerText,
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            };
+            const requestOptions = {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json', 
+                    "X-CSRFToken": payload.csrfmiddlewaretoken,
+                },
+                body: JSON.stringify(payload), 
+            };
+
+            // Use the fetch function to send the request
+            fetch("{% url "moveto" %}", requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(document.getElementById("maintenance_id").innerText);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    
+                });
+        }
+        
+        document.getElementById("moveNext").addEventListener("click",(e)=>{
+                        
+            payload = {
+                status_id: document.getElementById("next_status_id").innerText,
+                maintenance: document.getElementById("maintenance_id").innerText,
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+            // Create an object with the request options
+            const requestOptions = {
+            method: 'POST', // Use 'POST' for sending data
+            headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON if you're sending JSON data
+                "X-CSRFToken": payload.csrfmiddlewaretoken,
+            },
+            body: JSON.stringify(payload), // Convert the payload to JSON string
+            };
+            // Use the fetch function to send the request
+            fetch('{% url 'movenext' %}', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.nextColumn!=undefined){
+                    if (data.nextColumn.name === 'Cancelled') {
+                        document.getElementById("moveNext").style.display = "none"
+                    }else{
+
+                        document.getElementById("moveNext").style.display = "block"
+                        document.getElementById("next_status_id").innerText = data.nextColumn.id
+                        document.getElementById("moveNext").innerHTML = `
+                        Move to ${data.nextColumn.name} <span class="fas fa-arrow-right me-2"></span>
+                        `
+                    }
+
+                }else{
+                    document.getElementById("moveNext").style.display = "none"
+                }
+                
+                if (data.previousColumn!=undefined){
+                    if (data.previousColumn.name === 'Cancelled') {
+                        document.getElementById("movePrevious").style.display = "none"
+                    }else{
+
+                        document.getElementById("movePrevious").style.display = "block"
+                        document.getElementById("previous_status_id").innerText = data.previousColumn.id
+                        document.getElementById("movePrevious").innerHTML = `
+                        <span
+                        class="fas fa-arrow-left me-2"></span> Move to ${data.previousColumn.name}
+                        `
+                    }
+
+                }else{
+                    document.getElementById("movePrevious").style.display = "none"
+                }
+                Swal.fire({
+                        icon: 'success',
+                        title: 'Status updated Successfully.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error:', error);
+            });
+        })
+
+        document.getElementById("movePrevious").addEventListener("click" ,(e)=>{
+            
+            payload = {
+                status_id: document.getElementById("previous_status_id").innerText,
+                maintenance: document.getElementById("maintenance_id").innerText,
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+            // Create an object with the request options
+            const requestOptions = {
+            method: 'POST', // Use 'POST' for sending data
+            headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON if you're sending JSON data
+                "X-CSRFToken": payload.csrfmiddlewaretoken,
+            },
+            body: JSON.stringify(payload), // Convert the payload to JSON string
+            };
+            // Use the fetch function to send the request
+            fetch('{% url 'moveprevious' %}', requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                
+                if (data.nextColumn!=undefined){
+                    if (data.nextColumn.name === 'Cancelled') {
+                        document.getElementById("moveNext").style.display = "none"
+                    }else{
+
+                        document.getElementById("moveNext").style.display = "block"
+                        document.getElementById("next_status_id").innerText = data.nextColumn.id
+                        document.getElementById("moveNext").innerHTML = `
+                        Move to ${data.nextColumn.name} <span class="fas fa-arrow-right me-2"></span>
+                        `
+                    }
+
+                }else{
+                    document.getElementById("moveNext").style.display = "none"
+                }
+                
+                if (data.previousColumn!=undefined){
+                    if (data.previousColumn.name === 'Cancelled') {
+                        document.getElementById("movePrevious").style.display = "none"
+                    }else{
+
+                        document.getElementById("movePrevious").style.display = "block"
+                        document.getElementById("previous_status_id").innerText = data.previousColumn.id
+                        document.getElementById("movePrevious").innerHTML = `
+                        <span
+                        class="fas fa-arrow-left me-2"></span> Move to ${data.previousColumn.name}
+                        `
+                    }
+
+                }else{
+                    document.getElementById("movePrevious").style.display = "none"
+                }
+                Swal.fire({
+                        icon: 'success',
+                        title: 'Status updated Successfully.',
+                        showConfirmButton: false,
+                        timer: 1500
+                })
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        })
+
+
+        function editTask(id) {
+            fetch(`/api/maintenance_detail/${id}/`).then((response)=>response.json()).then((data) => {
+                document.getElementById("maintenance_id").innerText = id;
+                document.getElementById("customerName").innerHTML = data.user.first_name+" "+data.user.last_name
+                document.getElementById("requestCreated").innerHTML = data.created_at_ago
+                console.log("DATa",data);
+                if (data.next_status!=undefined){
+                    if (data.next_status.name === 'Cancelled') {
+                        document.getElementById("moveNext").style.display = "none"
+                    }else{
+                        document.getElementById("next_status_id").innerText = data.next_status.id
+                        document.getElementById("moveNext").innerHTML = `
+                        <span
+                        class="fas fa-arrow-right me-2"></span> Move to ${data.next_status.name}
+                        `    
+                    }
+                }else{
+                    document.getElementById("moveNext").style.display = "none"
+                }
+                if(data.previous_status!=undefined){
+                    if (data.previous_status.name === 'Cancelled') {
+                        document.getElementById("movePrevious").style.display = "none"
+                    }else{
+
+                        document.getElementById("previous_status_id").innerText = data.previous_status.id
+                        document.getElementById("movePrevious").innerHTML = `
+                        <span
+                        class="fas fa-arrow-left me-2"></span> Move to ${data.previous_status.name}
+                        `
+                    }
+                }else{
+                    document.getElementById("movePrevious").style.display = "none"
+                }
+                var columns = JSON.parse(data.columns);
+                let requestStatus = document.getElementById("requestStatus")
+                requestStatus.innerHTML = ""
+                for (var i = 0; i < columns.length; i++) {
+                    var column = columns[i];
+                    let option1 = document.createElement("option");
+                    option1.value = column.id; // Set the value attribute
+                    
+                    option1.text = column.name; 
+                    if (column.name === data.status.name) {
+                        option1.selected = true; // Set this option as the selected one
+                    }
+                    console.log(column.name);
+                    if (column.name === 'Cancelled') {
+        
+                    continue; 
+                } else {
+                   
+                    requestStatus.appendChild(option1);
+                }
+                }
+               
+                // requestStatus.innerText = data.status.name
+                let requestTitle = document.getElementById("requestTitle")
+                requestTitle.innerText = data.request_title
+                let user_profiles = document.getElementById("user-list")
+                console.log(data.assigned_users);
+                if (data.assigned_users.length !== 0){
+                    document.getElementById('user-list').style.display = 'flex'
+                }
+                user_profiles.innerHTML = ""
+                data.assigned_users.forEach(user => {
+                    console.log(user);
+                    console.log("user");
+                    img_url = user.user.profile_image.image
+                    user_profiles.innerHTML += `
+                       <div class="user-profile" style="
+                                display: flex;
+                                align-items: center;
+                                background: white;
+                                padding: 10px;
+                                border-radius: 10px;
+                            }">
+                                <div style="width: 30%; border-radius: 50%;" class="mx-2" id="user_img">
+                                    <img style="border-radius: 50%;" src="${img_url}" width="" alt="User 1">
+                                </div>
+                                 <div style="width: 70%;" id="user_detail">
+                                    <span class="user-name">${user.user.first_name} ${user.user.last_name}</span>
+                                 </div>
+                                </div>
+                    `
+                });
+                let issues_list = document.getElementById("issues_list")
+                issues_list.innerHTML = `
+                <p style="text-align:justify;">
+                ${data.user.first_name} submitted an issue ${data.created_at_ago}. They have encountered a maintenance problem in ${data.building.name}, which is located in the ${data.unit.name} unit. The issue is specifically in room ${data.room.room_no} and is related to the maintenance item called <b>${data.maintenance_item.name}</b>.<br/>
+                    The issue description provided by the user is as follows: <b>${data.issue_details}</b>.
+
+                    The status of this maintenance request is currently <b>${data.status.name},</b> and it has been assigned the color code <b>${data.status.color_class}</b> to indicate its urgency.
+
+                    Please take the necessary steps to address this issue promptly and ensure a resolution in a timely manner. If you have any questions or need further information, please reach out to the user or the assigned personnel.
+                    </p>
+                    `
+                attachment_list = document.getElementById("attachment_list")
+                attachment_list.innerHTML = ""
+                attachment_list.innerHTML += `
+                    <ul>
+                `
+                data.problemImage.forEach((image, index) => {
+                    attachment_list.innerHTML += `
+                            <li><a href="${image.image}">Attachment #${index}</a></li>
+                    `
+                })
+                attachment_list.innerHTML +=`
+                    </ul>
+                `
+                // Comment List
+                let commentList = document.getElementById("commentList")
+                let employeeAssigned = document.getElementById("employeesAssigned")
+                
+                
+                employeeAssigned.innerHTML = ""
+                data.assigned_users.forEach(user => {
+                    console.log(user);
+                    console.log("user");
+                    img_url = user.user.profile_image.image
+                    employeeAssigned.innerHTML += `
+                        <a href="#" class="avatar-md" data-bs-placement="top" data-bs-toggle="tooltip" data-original-title="${user.user.first_name} ${user.user.last_name}" data-bs-original-title="${user.user.first_name} ${user.user.last_name}" title="${user.user.first_name} ${user.user.last_name}">
+                            <img class="rounded" alt="Image placeholder" src="${img_url}">
+                        </a>
+                    `
+                });
+
+                commentList.innerHTML = ""
+                data.messages.forEach((message, index) => {commentList
+                    commentList.innerHTML += `
+                            <div class="col-12 mb-4">
+                                <div class="bg-gray-100 border border-gray-300 rounded p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h3 class="fs-6 mb-0 me-3">${message.user.first_name} ${message.user.last_name}</h3>
+                                        <small>${message.created_at_ago}</small>
+                                    </div>
+                                    <p class="text-dark mb-1">${message.message}</p>
+                                    ${message.attachment ? `
+                                    <a class="text-dark m-1" href="${message.attachment}"><small>${message.user.first_name} Attach a file click to check</small></a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    })
+
+                })
+                
+                const interval = setInterval(check, 1000);
+            }
+
+        // Function to prevent form submission and send AJAX request
+        function submitCommentForm(event) {
+            event.preventDefault();
+            console.log("HErerer");
+            console.log(document.getElementById("maintenance_id").innerText); // Prevent the default form submission
+            // Build the payload
+            let payload = {
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                data: {
+                    attachment: document.getElementById('attachment').files[0], // Use files[0] to get the first selected file
+                    message: document.getElementById('coment').value,
+                    maintenance_id: document.getElementById("maintenance_id").innerText
+                },
+            };
+
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', payload.csrfmiddlewaretoken);
+            formData.append('message', payload.data.message);// Append the file directly
+            if (document.getElementById('attachment').files[0]!=undefined){
+                payload.data.attachment = document.getElementById('attachment').files[0]
+                formData.append('attachment', payload.data.attachment); 
+            }
+
+            // You can add other form fields here as needed
+            formData.append('user', '{{request.user.id}}');
+            formData.append('maintenance', payload.data.maintenance_id);
+            // Send an AJAX POST request to the Django endpoint
+            fetch("{% url 'create-messages' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": payload.csrfmiddlewaretoken,
+                },
+                body: formData,
+            })
+            .then(response => response.json())
+            .then((data) => {
+                fetch("/api/messages/"+document.getElementById("maintenance_id").innerText)
+                .then((resp)=>resp.json())
+                .then((data)=>{
+                    // Comment List
+                    document.getElementById('coment').value = ""
+                    let commentList = document.getElementById("commentList")
+                    commentList.innerHTML = ""
+                    
+                    data.messages.forEach((message, index) => {
+                        commentList.innerHTML += `
+                            <div class="col-12 mb-4">
+                                <div class="bg-gray-100 border border-gray-300 rounded p-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h3 class="fs-6 mb-0 me-3">${message.user.first_name} ${message.user.last_name}</h3>
+                                        <small>${message.created_at_ago}</small>
+                                    </div>
+                                    <p class="text-dark mb-1">${message.message}</p>
+                                    ${message.attachment ? `
+                                    <a class="text-dark m-1" href="${message.attachment}">Click to download</a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        `;
+                    })
+                })
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+
+        function assignEmployee(event) {
+            event.preventDefault(); // Prevent the default form submission
+            assinig_emloyee = document.getElementById("assinig_emloyee")
+            payload = {
+                user: assinig_emloyee.value,
+                maintenance: document.getElementById("maintenance_id").innerText,
+                csrfmiddlewaretoken: document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+            // Create an object with the request options
+            const requestOptions = {
+            method: 'POST', // Use 'POST' for sending data
+            headers: {
+                'Content-Type': 'application/json', // Set the content type to JSON if you're sending JSON data
+                "X-CSRFToken": payload.csrfmiddlewaretoken,
+            },
+            body: JSON.stringify(payload), // Convert the payload to JSON string
+            };
+
+            // Use the fetch function to send the request
+            fetch("{% url 'assignuser' %}", requestOptions)
+            .then(response => response.json())
+            .then(data => {
+                let employeeAssigned = document.getElementById("employeesAssigned")
+                if (data.created) {
+                    
+                    img_url = data.user.profile_image.image==undefined?"https://source.unsplash.com/featured/300x300":data.user.profile_image.image
+                    employeeAssigned.innerHTML += `
+                        <a href="#" class="avatar-md" data-bs-toggle="tooltip" data-original-title="${data.user.first_name}" data-bs-original-title="" title="${data.user.first_name}">
+                            <img class="rounded" alt="Image placeholder" src="${img_url}">
+                        </a>`
+                    document.getElementById("editEmployeeModal").classList.toggle("show")
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'Employee assigned successfully.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                }
+                else
+                {
+                            
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Looks like this user is already assigned to this task!',
+                        })
+                }
+            })
+            .catch(error => {
+                // Handle errors
+                console.error('Error:', error);
+            });
+            
+        }
+        // Add an event listener to the form
+        document.querySelector("#submitCommentForm").addEventListener("submit", submitCommentForm);
+        document.querySelector("#addEmployee").addEventListener("submit", assignEmployee);
+        function fetchNotifications() {
+            fetch('/api/notifications/latest')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach((notification) => {
+                        if (notification.event === "change") { // Corrected property name
+                            editTask(document.getElementById("maintenance_id").innerText);
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching notifications:', error);
+                });
+        }
+        function check(){
+            var editTaskModal = document.getElementById('editTaskModal');
+            console.log(editTaskModal.className)
+            
+            if (editTaskModal.className !== 'modal fade show') {
+                window.location.replace("/")
+            }
+        }
+        const interval = setInterval(fetchNotifications, 5000);
+        
+        {% if request.GET.open_maintenance %}
+            document.getElementById("maintenance_task{{request.GET.open_maintenance}}").click()
+        
+        {% endif %}
+
+        
+    </script>
+
+    
+
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign in | ApexCare</title>
+    <link href="{% static "css/styles2.css" %}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/64d58efce2.js"
+      crossorigin="anonymous"
+    ></script>
+  
+  </head>
+  <body>
+    <div class="container">
+      <div class="forms-container">
+        <div class="signin-signup">
+          <form method="POST" class="sign-in-form">
+            {%csrf_token%}
+            <h2 class="title">Log In</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="email" placeholder="Email" name="email" />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" placeholder="Password" name="password" />
+            </div>
+            <div class="text-end pt-4">
+                {% for message in messages %}
+                <p class="mb-0 text-danger" style="color: red;">{{ message }}</p>
+                {% endfor %}
+               
+            </div>
+            <button type="submit" value="Login" class="btn solid">Login</button>
+            
+           
+            
+          </form>
+        </div>
+      </div>
+      <div class="panels-container">
+
+        <div class="panel left-panel">
+          
+            <div class="content text-center">
+              <h1 style="font-size: 50px; margin-right: 5rem;">ApexCare</h1>
+  
+            </div>
+            <img src="{% static 'images/log.svg'%}" class="image" alt="">
+        </div>
+
+        
+      </div>
+    </div>
+
+    <script>
+       
+    </script>
+  </body>
+</html>
